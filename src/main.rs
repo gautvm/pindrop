@@ -1,5 +1,5 @@
 use apriltag::{
-    families::ApriltagFamily, Detection, DetectorBuilder, Family, Image, MatdRef, Pose, TagParams,
+    Detection, DetectorBuilder, Family, Image, Pose, TagParams,
 };
 
 // Delete before releasing, meant for debugging / printing
