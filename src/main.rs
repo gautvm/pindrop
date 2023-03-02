@@ -1,4 +1,6 @@
-use apriltag::{Detection, DetectorBuilder, Family, Image, MatdRef, TagParams, Pose, families::ApriltagFamily};
+use apriltag::{
+    families::ApriltagFamily, Detection, DetectorBuilder, Family, Image, MatdRef, Pose, TagParams,
+};
 
 // Delete before releasing, meant for debugging / printing
 #[derive(Debug)]
@@ -6,7 +8,7 @@ struct AprilTagDetection {
     id: usize,
     confidence: f32,
     error: f32,
-    pose: Option<Pose>
+    pose: Option<Pose>,
 }
 
 fn main() {
@@ -27,14 +29,18 @@ fn main() {
         fy: 220.0,
         tagsize: 16.0,
     };
-    
 
     detections
         .into_iter()
         .enumerate()
         .for_each(|(index, detection)| {
             let estimated_pose = detection.estimate_tag_pose(&tag_params);
-            let apriltag_detection = AprilTagDetection { id: detection.id(), confidence: 10.3, error: 10.3, pose: estimated_pose };
+            let apriltag_detection = AprilTagDetection {
+                id: detection.id(),
+                confidence: 10.3,
+                error: 10.3,
+                pose: estimated_pose,
+            };
 
             println!("apriltag_detection {index} {:#?}", apriltag_detection.id);
         });
