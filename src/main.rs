@@ -24,7 +24,7 @@ fn main() {
     let tag_params = TagParams { //! idk these numbers
         cx : 0.0,
         cy : 0.0,
-        fx : 220.0
+        fx : 220.0,
         fy : 220.0,
         tagsize : 16.0,
     };
