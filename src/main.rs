@@ -1,10 +1,7 @@
-use apriltag::{DetectorBuilder, Family, Image, Detection};
+use apriltag::{Detection, DetectorBuilder, Family, Image};
 
-fn main() {
-    let path = concat!(
-        env!("CARGO_MANIFEST_DIR"),
-        "/test_data/apriltag_board.pnm"
-    );
+fn   main() {
+    let path = concat!(env!("CARGO_MANIFEST_DIR"), "/test_data/apriltag_board.pnm");
     let image = Image::from_pnm_file(path).unwrap();
 
     let mut detector = DetectorBuilder::new()
@@ -12,10 +9,9 @@ fn main() {
         .build()
         .expect("Valid builder");
 
-    let detections: Vec<Detection> = detector
-        .detect(&image);
+    let detections: Vec<Detection> = detector.detect(&image);
 
-        detections.into_iter().enumerate().for_each(|(index, det)| {
-            println!("  - detection {index}: {det:#?}");
-        });
+    detections.into_iter().enumerate().for_each(|(index, det)| {
+        println!("  - detection {index}: {det:#?}");
+    });
 }
