@@ -1,5 +1,5 @@
 use apriltag::{Image, TagParams};
-use pindrop::estimate_poses::{estimate_poses};
+use pindrop::estimate_poses::estimate_poses;
 use pindrop::pose_estimation::AprilTagPoseEstimation;
 
 fn main() {
@@ -15,6 +15,7 @@ fn main() {
         fy: 220.0,
         tagsize: 16.0,
     };
+
 
     let pose_estimations: Vec<Vec<AprilTagPoseEstimation>> = estimate_poses(image, tag_params);
     pose_estimations
