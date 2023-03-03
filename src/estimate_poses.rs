@@ -13,8 +13,8 @@ pub fn estimate_poses(image: Image, tag_params: TagParams) -> Vec<Vec<AprilTagPo
         .into_iter()
         .map(|detection| {
             let pose_estimations: Vec<PoseEstimation> =
-                detection.estimate_tag_pose_orthogonal_iteration(&tag_params, 1);
-
+                detection.estimate_tag_pose_orthogonal_iteration(&tag_params, 40);
+                
             let mut pose_estimations: Vec<AprilTagPoseEstimation> = pose_estimations
                 .into_iter()
                 .map(|pose| AprilTagPoseEstimation {
