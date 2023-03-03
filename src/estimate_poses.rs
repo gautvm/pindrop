@@ -1,5 +1,6 @@
 use crate::pose_estimation::AprilTagPoseEstimation;
 use apriltag::{Detection, DetectorBuilder, Family, Image, PoseEstimation, TagParams};
+use nalgebra::{Matrix3, Rotation3, Translation3, Vector3};
 
 pub fn estimate_poses(image: Image, tag_params: TagParams) -> Vec<Vec<AprilTagPoseEstimation>> {
     let mut detector = DetectorBuilder::new()
@@ -20,7 +21,12 @@ pub fn estimate_poses(image: Image, tag_params: TagParams) -> Vec<Vec<AprilTagPo
                 .map(|pose| AprilTagPoseEstimation {
                     id: detection.id(),
                     error: pose.error,
-                    pose: pose.pose,
+                    translation: Translation3::from(Vector3::from_row_slice(
+                        pose.pose.translation().data(),
+                    )),
+                    rotation: Rotation3::from_matrix(&Matrix3::from_row_slice(
+                        pose.pose.rotation().data(),
+                    )),
                 })
                 .collect();
 

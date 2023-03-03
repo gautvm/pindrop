@@ -1,5 +1,4 @@
 use apriltag::{Image, TagParams};
-use nalgebra::{Rotation3, Translation3, Vector3, Matrix3};
 use pindrop::estimate_poses::estimate_poses;
 use pindrop::pose_estimation::AprilTagPoseEstimation;
 
@@ -23,16 +22,10 @@ fn main() {
         .enumerate()
         .for_each(|estimations| {
             if let Some(best_pose) = estimations.1.first() {
-                let rotation = Rotation3::from_matrix(&Matrix3::from_row_slice(best_pose.pose.rotation().data()));
-                let translation = Translation3::from(Vector3::from_row_slice(best_pose.pose.translation().data()));
-
                 println!(
-                    "Best pose for detection {}: {{ id: {}, error: {}, pose: {:#?} }}",
-                    estimations.0, best_pose.id, best_pose.error, best_pose.pose
+                    "Best pose for detection {}: {{ id: {}, error: {}, translation: {:#?}, rotation: {:#?} }}",
+                    estimations.0, best_pose.id, best_pose.error, best_pose.translation, best_pose.rotation
                 );
-
-                println!("Best pose nalgebra translation for {}: {:#?} ", estimations.0, translation);
-                println!("Best pose nalgebra rotation for {}: {:#?} ", estimations.0, rotation);
             } else {
                 println!("No valid pose estimation for detection {}", estimations.0)
             }
