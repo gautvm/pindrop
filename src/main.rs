@@ -34,14 +34,28 @@ fn main() {
             let pose_estimations: Vec<PoseEstimation> =
                 detection.estimate_tag_pose_orthogonal_iteration(&tag_params, 1);
 
-            pose_estimations
+            let mut pose_estimations: Vec<AprilTagPoseEstimation> = pose_estimations
                 .into_iter()
                 .map(|pose| AprilTagPoseEstimation {
                     id: detection.id(),
                     error: pose.error,
                     pose: pose.pose,
                 })
-                .collect()
+                .collect();
+
+            // Sort estimations based on error
+            pose_estimations.sort_by(|pose_a, pose_b| pose_a.error.partial_cmp(&pose_b.error).unwrap());
+
+            if pose_estimations.len() > 1 {
+                let error_difference = pose_estimations[1].error - pose_estimations[0].error;
+
+                // Compares best pose to error difference by ambiguity threshold
+                if error_difference / pose_estimations[0].error < 0.1 {
+                    pose_estimations.clear();
+                }
+            }
+
+            pose_estimations
         })
         .collect();
 
@@ -49,15 +63,13 @@ fn main() {
         .into_iter()
         .enumerate()
         .for_each(|estimations| {
-            estimations
-                .1
-                .into_iter()
-                .enumerate()
-                .for_each(|(index, estimation)| {
-                    println!(
-                        "pose_estimation {}: {{ id: {}, error: {}, pose: {:#?} }}",
-                        index, estimation.id, estimation.error, estimation.pose
-                    )
-                })
+            if let Some(best_pose) = estimations.1.first() {
+                println!(
+                    "Best pose for detection {}: {{ id: {}, error: {}, pose: {:#?} }}",
+                    estimations.0, best_pose.id, best_pose.error, best_pose.pose
+                )
+            } else {
+                println!("No valid pose estimation for detection {}", estimations.0)
+            }
         });
 }
