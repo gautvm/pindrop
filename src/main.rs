@@ -1,11 +1,8 @@
-use apriltag::{Detection, DetectorBuilder, Family, Image, Pose, TagParams};
+use apriltag::{Detection, DetectorBuilder, Family, Image, Pose, TagParams, PoseEstimation};
 
-// Delete before releasing, meant for enabling debugging / printing
-#[derive(Debug)]
-struct AprilTagDetection {
+struct AprilTagPoseEstimation {
     id: usize,
-    confidence: f32,
-    error: f32,
+    error: f64,
     pose: Pose,
 }
 
@@ -31,19 +28,35 @@ fn main() {
         tagsize: 16.0,
     };
 
-    detections
+    let pose_estimations: Vec<Vec<AprilTagPoseEstimation>> = detections
+        .into_iter()
+        .map(|detection| {
+            let pose_estimations: Vec<PoseEstimation> =
+                detection.estimate_tag_pose_orthogonal_iteration(&tag_params, 1);
+
+            pose_estimations
+                .into_iter()
+                .map(|pose| AprilTagPoseEstimation {
+                    id: detection.id(),
+                    error: pose.error,
+                    pose: pose.pose,
+                })
+                .collect()
+        })
+        .collect();
+
+    pose_estimations
         .into_iter()
         .enumerate()
-        .for_each(|(index, detection)| {
-            let estimated_pose = detection.estimate_tag_pose(&tag_params)
-    .unwrap_or_else(|| panic!("Failed to estimate pose for detection {}", detection.id()));
-            let apriltag_detection = AprilTagDetection {
-                id: detection.id(),
-                confidence: 10.3,
-                error: 10.3,
-                pose: estimated_pose,
-            };
-
-            println!("apriltag_detection {}: {{ id: {}, confidence: {}, error: {}, pose: {:#?} }}", index, apriltag_detection.id, apriltag_detection.confidence, apriltag_detection.error, apriltag_detection.pose)
+        .for_each(|estimations| {
+            estimations.1
+                .into_iter()
+                .enumerate()
+                .for_each(|(index, estimation)| {
+                    println!(
+                        "pose_estimation {}: {{ id: {}, error: {}, pose: {:#?} }}",
+                        index, estimation.id, estimation.error, estimation.pose
+                    )
+                })
         });
 }
