@@ -1,5 +1,5 @@
-use apriltag::{Detection, DetectorBuilder, Family, Image, PoseEstimation, TagParams};
 use crate::pose_estimation::AprilTagPoseEstimation;
+use apriltag::{Detection, DetectorBuilder, Family, Image, PoseEstimation, TagParams};
 
 pub fn estimate_poses(image: Image, tag_params: TagParams) -> Vec<Vec<AprilTagPoseEstimation>> {
     let mut detector = DetectorBuilder::new()
@@ -14,7 +14,7 @@ pub fn estimate_poses(image: Image, tag_params: TagParams) -> Vec<Vec<AprilTagPo
         .map(|detection| {
             let pose_estimations: Vec<PoseEstimation> =
                 detection.estimate_tag_pose_orthogonal_iteration(&tag_params, 40);
-                
+
             let mut pose_estimations: Vec<AprilTagPoseEstimation> = pose_estimations
                 .into_iter()
                 .map(|pose| AprilTagPoseEstimation {
@@ -41,5 +41,5 @@ pub fn estimate_poses(image: Image, tag_params: TagParams) -> Vec<Vec<AprilTagPo
         })
         .collect();
 
-    return pose_estimations;
+    pose_estimations
 }
