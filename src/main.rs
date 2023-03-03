@@ -1,4 +1,4 @@
-use apriltag::{Detection, DetectorBuilder, Family, Image, Pose, TagParams, PoseEstimation};
+use apriltag::{Detection, DetectorBuilder, Family, Image, Pose, PoseEstimation, TagParams};
 
 struct AprilTagPoseEstimation {
     id: usize,
@@ -49,7 +49,8 @@ fn main() {
         .into_iter()
         .enumerate()
         .for_each(|estimations| {
-            estimations.1
+            estimations
+                .1
                 .into_iter()
                 .enumerate()
                 .for_each(|(index, estimation)| {
