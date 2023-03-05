@@ -1,6 +1,6 @@
+use apriltag::{Image, TagParams};
 use pindrop::cli::{Cli, Command};
 use pindrop::pose;
-use apriltag::{Image, TagParams};
 use structopt::StructOpt;
 fn main() {
     let args = Cli::from_args();
@@ -21,8 +21,9 @@ fn main() {
                     fy: 220.0,
                     tagsize: 16.0,
                 };
-                
-                let pose_estimations: Vec<Vec<pose::PindropPoseEstimation>> = pose::estimate(image, tag_params);
+
+                let pose_estimations: Vec<Vec<pose::PindropPoseEstimation>> =
+                    pose::estimate(image, tag_params);
                 pose_estimations
                     .into_iter()
                     .enumerate()
