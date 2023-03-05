@@ -1,8 +1,16 @@
-use crate::pose_estimation::AprilTagPoseEstimation;
+use crate::geometry;
 use apriltag::{Detection, DetectorBuilder, Family, Image, PoseEstimation, TagParams};
-use nalgebra::{Matrix3, Rotation3, Translation3, Vector3};
+use nalgebra::{Rotation, Translation};
 
-pub fn estimate_poses(image: Image, tag_params: TagParams) -> Vec<Vec<AprilTagPoseEstimation>> {
+#[derive(Debug)]
+pub struct PindropPoseEstimation {
+    pub id: usize,
+    pub error: f64,
+    pub translation: Translation<f64, 3>,
+    pub rotation: Rotation<f64, 3>,
+}
+
+pub fn estimate(image: Image, tag_params: TagParams) -> Vec<Vec<PindropPoseEstimation>> {
     let mut detector = DetectorBuilder::new()
         .add_family_bits(Family::tag_16h5(), 1)
         .build()
@@ -10,23 +18,19 @@ pub fn estimate_poses(image: Image, tag_params: TagParams) -> Vec<Vec<AprilTagPo
 
     let detections: Vec<Detection> = detector.detect(&image);
 
-    let pose_estimations: Vec<Vec<AprilTagPoseEstimation>> = detections
+    let pose_estimations: Vec<Vec<PindropPoseEstimation>> = detections
         .into_iter()
         .map(|detection| {
             let pose_estimations: Vec<PoseEstimation> =
                 detection.estimate_tag_pose_orthogonal_iteration(&tag_params, 40);
 
-            let mut pose_estimations: Vec<AprilTagPoseEstimation> = pose_estimations
+            let mut pose_estimations: Vec<PindropPoseEstimation> = pose_estimations
                 .into_iter()
-                .map(|pose| AprilTagPoseEstimation {
+                .map(|raw_pose| PindropPoseEstimation {
                     id: detection.id(),
-                    error: pose.error,
-                    translation: Translation3::from(Vector3::from_row_slice(
-                        pose.pose.translation().data(),
-                    )),
-                    rotation: Rotation3::from_matrix(&Matrix3::from_row_slice(
-                        pose.pose.rotation().data(),
-                    )),
+                    error: raw_pose.error,
+                    translation: geometry::to_translation_3(raw_pose.pose.translation().data()),
+                    rotation: geometry::to_rotation_3(raw_pose.pose.rotation().data()),
                 })
                 .collect();
 

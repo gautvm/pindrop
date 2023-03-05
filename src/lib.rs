@@ -1,3 +1,3 @@
-pub mod estimate_poses;
-pub mod pose_estimation;
+pub mod geometry;
+pub mod pose;
 pub mod pose_estimator;
