@@ -28,9 +28,9 @@ cd $SRC_DIRECTORY
 $BUILD_SOURCE_COMMAND
 
 # Deploy and scp code
-echo "Copying Pindrop"
+echo "Copying Pindrop..."
 $SCP_COMMAND
 
 # Run binary
-echo "Executing Pindrop"
+echo "Executing Pindrop..."
 $SSH_COMMAND
