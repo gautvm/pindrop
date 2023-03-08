@@ -1,5 +1,12 @@
 {
-    "device_id": "pindrop",
-    "server_ip": "10.00.86.12",
-    "stream_port": 8000
+    "device": {
+        "host_name": "pindrop",
+        "ip": "10.00.86.12"
+    },
+    "camera": {
+        "stream_port": 8000
+    },
+    "pose": {
+        "ambiguity_threshold": 0.10
+    }
 }
