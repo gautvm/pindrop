@@ -5,6 +5,8 @@ edition = "2021"
 
 [dependencies]
 apriltag = "0.4.0"
+apriltag-image = "0.1.0"
 nalgebra = "0.32.2"
+nokhwa = "0.10.3"
 nt = "3.0.0"
 structopt = "0.3"
