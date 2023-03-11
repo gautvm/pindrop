@@ -1,6 +1,55 @@
 {
-    "ambiguity_threshold": 0.10,
-    "camera_id": "pindrop",
-    "robot_ip": "10.00.86.12",
-    "camera_stream_port": 8000
+  "cam_settings": {
+    "brightness": 0.5,
+    "gain": 15,
+    "exposure": 1,
+    "orientation": 180,
+    "resolution": [
+      640,
+      480
+    ],
+    "fps": 90,
+    "fov": 60
+  },
+  "pose_estimations": {
+    "camera_matrix": [
+      [
+        1,
+        0,
+        0
+      ],
+      [
+        0,
+        1,
+        0
+      ],
+      [
+        0,
+        0,
+        1
+      ]
+    ],
+    "distortion_coefficients": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "rotation_vector": [
+      0,
+      0,
+      0
+    ],
+    "translation_vector": [
+      0,
+      0,
+      0
+    ]
+  },
+  "networking": {
+    "hostname": "pindrop",
+    "ip": "10.00.86.12",
+    "port": 8000
+  }
 }
