@@ -3,9 +3,12 @@ use apriltag_image::ImageExt;
 use nokhwa::pixel_format::LumaFormat;
 use nokhwa::utils::{CameraIndex, RequestedFormat, RequestedFormatType};
 use nokhwa::Camera;
-use pindrop::pose;
+use pindrop::{pose, parser};
 
 fn main() {
+    // let config = parser::parse("pindrop.config.json").unwrap();
+    // println!("{:#?}", config);
+    
     let index = CameraIndex::Index(0);
     let requested =
         RequestedFormat::new::<LumaFormat>(RequestedFormatType::AbsoluteHighestFrameRate);
