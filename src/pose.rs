@@ -1,15 +1,13 @@
 use crate::geometry;
 use apriltag::{Detection, DetectorBuilder, Family, Image, PoseEstimation, TagParams};
-use nalgebra::{Rotation, Translation, Vector3, Translation3, Rotation3, Matrix, Quaternion, UnitQuaternion, Unit};
+use nalgebra::{Rotation, Translation, Isometry3, Translation3};
 
 #[derive(Debug)]
 pub struct PindropPoseEstimation {
     pub id: usize,
     pub error: f64,
-    pub translation: Translation<f64, 3>,
-    pub rotation: Rotation<f64, 3>,
+    pub pose: Isometry3<f64>
 }
-
 
 
 pub fn fixed_transform(original: (Translation<f64, 3>, Rotation<f64, 3>), transf: (Translation<f64, 3>, Rotation<f64, 3>)) -> (Translation<f64, 3>, Rotation<f64, 3>) {
@@ -37,8 +35,7 @@ pub fn estimate(image: Image, tag_params: TagParams) -> Vec<Vec<PindropPoseEstim
                 .map(|raw_pose| PindropPoseEstimation {
                     id: detection.id(),
                     error: raw_pose.error,
-                    translation: geometry::to_translation_3(raw_pose.pose.translation().data()),
-                    rotation: geometry::to_rotation_3(raw_pose.pose.rotation().data()),
+                    pose: Isometry3::new(geometry::to_nalgebra(raw_pose.pose.translation().data()), geometry::to_nalgebra(raw_pose.pose.rotation().data()))
                 })
                 .collect();
 

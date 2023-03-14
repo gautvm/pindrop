@@ -33,8 +33,8 @@ fn main() {
         .for_each(|estimations| {
             if let Some(best_pose) = estimations.1.first() {
                 println!(
-                    "Best pose for detection {}: {{ id: {}, error: {}, translation: {:#?}, rotation: {:#?} }}",
-                    estimations.0, best_pose.id, best_pose.error, best_pose.translation, best_pose.rotation
+                    "Best pose for detection {}: {{ id: {}, error: {}, pose: {:#?} }}",
+                    estimations.0, best_pose.id, best_pose.error, best_pose.pose,
                 );
             } else {
                 println!("No valid pose estimation for detection {}", estimations.0)
