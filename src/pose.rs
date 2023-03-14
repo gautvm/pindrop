@@ -1,6 +1,6 @@
 use crate::geometry;
 use apriltag::{Detection, DetectorBuilder, Family, Image, PoseEstimation, TagParams};
-use nalgebra::{Rotation, Translation};
+use nalgebra::{Rotation, Translation, Vector3, Translation3, Rotation3, Matrix, Quaternion, UnitQuaternion, Unit};
 
 #[derive(Debug)]
 pub struct PindropPoseEstimation {
@@ -8,6 +8,14 @@ pub struct PindropPoseEstimation {
     pub error: f64,
     pub translation: Translation<f64, 3>,
     pub rotation: Rotation<f64, 3>,
+}
+
+
+
+pub fn fixed_transform(original: (Translation<f64, 3>, Rotation<f64, 3>), transf: (Translation<f64, 3>, Rotation<f64, 3>)) -> (Translation<f64, 3>, Rotation<f64, 3>) {
+    //let tranlate:Translation<f64, 3> = Translation3::new(1.1, 3.1, 4.2); 
+
+    return (Translation3::from(original.0.vector+transf.0.vector), original.1 * transf.1);
 }
 
 pub fn estimate(image: Image, tag_params: TagParams) -> Vec<Vec<PindropPoseEstimation>> {
