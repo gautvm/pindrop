@@ -1,15 +1,14 @@
 use apriltag::{Image, TagParams};
 use apriltag_image::ImageExt;
-use nokhwa::Camera;
-use nokhwa::pixel_format::{RgbFormat, LumaFormat};
+use nokhwa::pixel_format::{LumaFormat};
 use nokhwa::utils::{CameraIndex, RequestedFormat, RequestedFormatType};
-use pindrop::cli::{Cli, Command};
+use nokhwa::Camera;
 use pindrop::pose;
-use structopt::StructOpt;
 
 fn main() {
-    let index = CameraIndex::Index(0); 
-    let requested = RequestedFormat::new::<LumaFormat>(RequestedFormatType::AbsoluteHighestFrameRate);
+    let index = CameraIndex::Index(0);
+    let requested =
+        RequestedFormat::new::<LumaFormat>(RequestedFormatType::AbsoluteHighestFrameRate);
     let mut camera = Camera::new(index, requested).unwrap();
     camera.open_stream();
 
@@ -25,8 +24,7 @@ fn main() {
         tagsize: 16.0,
     };
 
-    let pose_estimations: Vec<Vec<pose::PindropPoseEstimation>> =
-        pose::estimate(image, tag_params);
+    let pose_estimations: Vec<Vec<pose::PindropPoseEstimation>> = pose::estimate(image, tag_params);
     pose_estimations
         .into_iter()
         .enumerate()
