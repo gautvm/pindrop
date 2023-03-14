@@ -1,6 +1,6 @@
 use apriltag::{Image, TagParams};
 use apriltag_image::ImageExt;
-use nokhwa::pixel_format::{LumaFormat};
+use nokhwa::pixel_format::LumaFormat;
 use nokhwa::utils::{CameraIndex, RequestedFormat, RequestedFormatType};
 use nokhwa::Camera;
 use pindrop::pose;

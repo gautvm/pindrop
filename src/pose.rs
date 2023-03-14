@@ -1,6 +1,6 @@
 use crate::geometry;
 use apriltag::{Detection, DetectorBuilder, Family, Image, PoseEstimation, TagParams};
-use nalgebra::{Isometry3};
+use nalgebra::Isometry3;
 
 #[derive(Debug)]
 pub struct PindropPoseEstimation {
