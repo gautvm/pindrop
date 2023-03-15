@@ -27,7 +27,8 @@ fn main() {
         cy: config.tag_params.cy,
     };
 
-    let pose_estimations: Vec<Vec<pose::PindropPoseEstimation>> = pose::estimate(image, tag_params).unwrap();
+    let pose_estimations: Vec<Vec<pose::PindropPoseEstimation>> =
+        pose::estimate(image, tag_params).unwrap();
     pose_estimations
         .into_iter()
         .enumerate()
