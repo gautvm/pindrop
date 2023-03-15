@@ -7,6 +7,7 @@ use pindrop::{parser, pose};
 
 fn main() {
     let config = parser::parse("pindrop.config.json").unwrap();
+    println!("{:#?}", config.networking.port);
 
     let index = CameraIndex::Index(0);
     let requested =
@@ -26,7 +27,7 @@ fn main() {
         cy: config.tag_params.cy,
     };
 
-    let pose_estimations: Vec<Vec<pose::PindropPoseEstimation>> = pose::estimate(image, tag_params);
+    let pose_estimations: Vec<Vec<pose::PindropPoseEstimation>> = pose::estimate(image, tag_params).unwrap();
     pose_estimations
         .into_iter()
         .enumerate()
