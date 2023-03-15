@@ -29,8 +29,8 @@ pub fn estimate(image: Image, tag_params: TagParams) -> Vec<Vec<PindropPoseEstim
                     id: detection.id(),
                     error: raw_pose.error,
                     pose: Isometry3::new(
-                        geometry::to_nalgebra(raw_pose.pose.translation().data()),
-                        geometry::to_nalgebra(raw_pose.pose.rotation().data()),
+                        geometry::to_vector_3(raw_pose.pose.translation().data()),
+                        geometry::to_vector_3(raw_pose.pose.rotation().data()),
                     ),
                 })
                 .collect();
