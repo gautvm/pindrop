@@ -9,7 +9,7 @@ pub struct PindropPoseEstimation {
     pub pose: Isometry3<f64>,
 }
 
-pub fn estimate(image: Image, tag_params: TagParams) -> Vec<Vec<PindropPoseEstimation>> {
+pub fn estimate(image: Image, tag_params: TagParams) -> Result<Vec<Vec<PindropPoseEstimation>>, Box<dyn std::error::Error>> {
     let mut detector = DetectorBuilder::new()
         .add_family_bits(Family::tag_16h5(), 1)
         .build()
@@ -52,5 +52,5 @@ pub fn estimate(image: Image, tag_params: TagParams) -> Vec<Vec<PindropPoseEstim
         })
         .collect();
 
-    pose_estimations
+    Ok(pose_estimations)
 }

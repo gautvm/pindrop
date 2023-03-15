@@ -27,7 +27,7 @@ fn main() {
         tagsize: 16.0,
     };
 
-    let pose_estimations: Vec<Vec<pose::PindropPoseEstimation>> = pose::estimate(image, tag_params);
+    let pose_estimations: Vec<Vec<pose::PindropPoseEstimation>> = pose::estimate(image, tag_params).unwrap();
     pose_estimations
         .into_iter()
         .enumerate()
