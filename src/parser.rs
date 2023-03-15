@@ -27,10 +27,20 @@ pub struct Networking {
 }
 
 #[derive(Debug, Deserialize)]
+pub struct TagParams {
+    pub tag_size: f64,
+    pub fx: f64,
+    pub fy: f64,
+    pub cx: f64,
+    pub cy: f64,
+}
+
+#[derive(Debug, Deserialize)]
 pub struct PindropConfig {
     pub cam_settings: CameraSettings,
     pub pose_estimations: PoseEstimations,
     pub networking: Networking,
+    pub tag_params: TagParams,
 }
 
 pub fn parse(pindrop_config_path: &str) -> Result<PindropConfig, Box<dyn std::error::Error>> {

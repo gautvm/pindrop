@@ -3,12 +3,11 @@ use apriltag_image::ImageExt;
 use nokhwa::pixel_format::LumaFormat;
 use nokhwa::utils::{CameraIndex, RequestedFormat, RequestedFormatType};
 use nokhwa::Camera;
-use pindrop::{pose, parser};
+use pindrop::{parser, pose};
 
 fn main() {
-    // let config = parser::parse("pindrop.config.json").unwrap();
-    // println!("{:#?}", config);
-    
+    let config = parser::parse("pindrop.config.json").unwrap();
+
     let index = CameraIndex::Index(0);
     let requested =
         RequestedFormat::new::<LumaFormat>(RequestedFormatType::AbsoluteHighestFrameRate);
@@ -20,11 +19,11 @@ fn main() {
 
     let image = Image::from_image_buffer(&decoded);
     let tag_params = TagParams {
-        cx: 0.0,
-        cy: 0.0,
-        fx: 220.0,
-        fy: 220.0,
-        tagsize: 16.0,
+        tagsize: config.tag_params.tag_size,
+        fx: config.tag_params.fx,
+        fy: config.tag_params.fy,
+        cx: config.tag_params.cx,
+        cy: config.tag_params.cy,
     };
 
     let pose_estimations: Vec<Vec<pose::PindropPoseEstimation>> = pose::estimate(image, tag_params);

@@ -11,6 +11,13 @@
     "fps": 90,
     "fov": 60
   },
+  "tag_params": {
+    "cx": 0.0,
+    "cy": 0.0,
+    "fx": 220.0,
+    "fy": 220.0,
+    "tag_size": 16.0
+  },
   "pose_estimations": {
     "camera_matrix": [
       [
