@@ -1,12 +1,5 @@
-use crate::{geometry, Pose3};
+use crate::{geometry, Pose3, PindropPoseEstimation};
 use apriltag::{Detection, DetectorBuilder, Family, Image, PoseEstimation, TagParams};
-
-#[derive(Debug)]
-pub struct PindropPoseEstimation {
-    pub id: usize,
-    pub error: f64,
-    pub pose: Pose3<f64>,
-}
 
 pub fn estimate(
     image: Image,

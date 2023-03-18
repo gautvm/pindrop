@@ -3,7 +3,7 @@ use apriltag_image::ImageExt;
 use nokhwa::pixel_format::LumaFormat;
 use nokhwa::utils::{CameraIndex, RequestedFormat, RequestedFormatType};
 use nokhwa::Camera;
-use pindrop::{parser, pose};
+use pindrop::{parser, pose, PindropPoseEstimation};
 
 fn main() {
     let config = parser::parse("pindrop.config.json").unwrap();
@@ -27,7 +27,7 @@ fn main() {
         cy: config.tag_params.cy,
     };
 
-    let pose_estimations: Vec<Vec<pose::PindropPoseEstimation>> =
+    let pose_estimations: Vec<Vec<PindropPoseEstimation>> =
         pose::estimate(image, tag_params).unwrap();
     pose_estimations
         .into_iter()
