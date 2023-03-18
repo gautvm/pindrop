@@ -1,12 +1,11 @@
-use crate::geometry;
+use crate::{geometry, Pose3};
 use apriltag::{Detection, DetectorBuilder, Family, Image, PoseEstimation, TagParams};
-use nalgebra::Isometry3;
 
 #[derive(Debug)]
 pub struct PindropPoseEstimation {
     pub id: usize,
     pub error: f64,
-    pub pose: Isometry3<f64>,
+    pub pose: Pose3<f64>,
 }
 
 pub fn estimate(
@@ -31,7 +30,7 @@ pub fn estimate(
                 .map(|raw_pose| PindropPoseEstimation {
                     id: detection.id(),
                     error: raw_pose.error,
-                    pose: Isometry3::new(
+                    pose: Pose3::new(
                         geometry::to_vector_3(raw_pose.pose.translation().data()),
                         geometry::to_vector_3(raw_pose.pose.rotation().data()),
                     ),

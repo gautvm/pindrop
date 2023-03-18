@@ -1,4 +1,4 @@
-use nt::{CallbackType, ConnectionCallbackType, NetworkTables, EntryData, EntryValue};
+use nt::{CallbackType, ConnectionCallbackType, EntryData, EntryValue, NetworkTables};
 
 pub async fn listen(hostname: &str, ip: &str) {
     let mut nt = NetworkTables::bind(ip, hostname);
@@ -16,15 +16,16 @@ pub async fn listen(hostname: &str, ip: &str) {
     });
 }
 
-pub async fn write(hostname: &str, ip: &str, entry_name: &str, entry_value: EntryValue) -> Result<(), ()> {
+pub async fn write(
+    hostname: &str,
+    ip: &str,
+    entry_name: &str,
+    entry_value: EntryValue,
+) -> Result<(), ()> {
     let client = NetworkTables::connect(ip, hostname).await.unwrap();
 
     let _id = client
-        .create_entry(EntryData::new(
-            entry_name.to_string(),
-            0,
-            entry_value
-        ))
+        .create_entry(EntryData::new(entry_name.to_string(), 0, entry_value))
         .await;
 
     for (id, value) in client.entries() {
