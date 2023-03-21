@@ -1,4 +1,4 @@
-use crate::{geometry, Pose3, PindropPoseEstimation};
+use crate::{geometry, PindropPoseEstimation, Pose3};
 use apriltag::{Detection, DetectorBuilder, Family, Image, PoseEstimation, TagParams};
 
 pub fn estimate(

@@ -7,7 +7,7 @@ use pindrop::{parser, pose, PindropPoseEstimation};
 
 fn main() {
     let config = parser::parse("pindrop.config.json").unwrap();
-    println!("{:#?}", config.networking.port);
+    // println!("{:#?}", config.networking.port);
 
     let index = CameraIndex::Index(0);
     let requested =
