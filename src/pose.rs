@@ -1,10 +1,8 @@
-use crate::{geometry, PindropPoseEstimation, Pose3};
+use crate::{geometry, PindropPoseEstimation};
 use apriltag::{Detection, DetectorBuilder, Family, Image, PoseEstimation, TagParams};
+use nalgebra::Isometry3;
 
-pub fn estimate(
-    image: Image,
-    tag_params: TagParams,
-) -> Result<Vec<Vec<PindropPoseEstimation>>, Box<dyn std::error::Error>> {
+pub fn estimate(image: Image, tag_params: TagParams) -> Vec<Vec<PindropPoseEstimation>> {
     let mut detector = DetectorBuilder::new()
         .add_family_bits(Family::tag_16h5(), 1)
         .build()
@@ -17,16 +15,13 @@ pub fn estimate(
         .map(|detection| {
             let pose_estimations: Vec<PoseEstimation> =
                 detection.estimate_tag_pose_orthogonal_iteration(&tag_params, 40);
-
+            
             let mut pose_estimations: Vec<PindropPoseEstimation> = pose_estimations
                 .into_iter()
                 .map(|raw_pose| PindropPoseEstimation {
                     id: detection.id(),
                     error: raw_pose.error,
-                    pose: Pose3::new(
-                        geometry::to_vector_3(raw_pose.pose.translation().data()),
-                        geometry::to_vector_3(raw_pose.pose.rotation().data()),
-                    ),
+                    pose: raw_pose
                 })
                 .collect();
 
@@ -47,5 +42,5 @@ pub fn estimate(
         })
         .collect();
 
-    Ok(pose_estimations)
+    pose_estimations
 }

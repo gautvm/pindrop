@@ -27,16 +27,15 @@ fn main() {
         cy: config.tag_params.cy,
     };
 
-    let pose_estimations: Vec<Vec<PindropPoseEstimation>> =
-        pose::estimate(image, tag_params).unwrap();
+    let pose_estimations: Vec<Vec<PindropPoseEstimation>> = pose::estimate(image, tag_params);
     pose_estimations
         .into_iter()
         .enumerate()
         .for_each(|estimations| {
             if let Some(best_pose) = estimations.1.first() {
                 println!(
-                    "Best pose for detection {}: {{ id: {}, error: {}, pose: {:#?} }}",
-                    estimations.0, best_pose.id, best_pose.error, best_pose.pose,
+                    "Best pose for detection {}: {{ id: {}, error: {} }}",
+                    estimations.0, best_pose.id, best_pose.error,
                 );
             } else {
                 println!("No valid pose estimation for detection {}", estimations.0)
