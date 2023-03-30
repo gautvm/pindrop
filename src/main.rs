@@ -1,81 +1,47 @@
 use apriltag::{Image, TagParams};
 use apriltag_image::ImageExt;
-use nokhwa::pixel_format::LumaFormat;
-use nokhwa::utils::{CameraIndex, RequestedFormat, RequestedFormatType};
-use nokhwa::Camera;
+use nokhwa::{
+    pixel_format::LumaFormat, utils::{CameraIndex, RequestedFormat, RequestedFormatType},
+    Camera,
+};
 use pindrop::{parser, pose, PindropPoseEstimation};
+
+use std::time::{Duration, Instant};
 
 fn main() {
     let config = parser::parse("pindrop.config.json").unwrap();
-    // println!("{:#?}", config.networking.port);
-
     let index = CameraIndex::Index(0);
-    let requested =
-        RequestedFormat::new::<LumaFormat>(RequestedFormatType::AbsoluteHighestFrameRate);
+    let requested = RequestedFormat::new::<LumaFormat>(RequestedFormatType::AbsoluteHighestFrameRate);
     let mut camera = Camera::new(index, requested).unwrap();
-    camera.open_stream();
+    camera.open_stream().unwrap_or_else(|err| {
+        println!("Failed to open stream: {}", err);
+        std::process::exit(1);
+    });
 
-    let frame = camera.frame().unwrap();
-    let decoded = frame.decode_image::<LumaFormat>().unwrap();
+    loop {
+        let start = Instant::now();
+        let tag_params = TagParams {
+            tagsize: config.tag_params.tag_size,
+            fx: config.tag_params.fx,
+            fy: config.tag_params.fy,
+            cx: config.tag_params.cx,
+            cy: config.tag_params.cy,
+        };
+        let frame = camera.frame().unwrap();
+        let decoded = frame.decode_image::<LumaFormat>().unwrap();
 
-    let image = Image::from_image_buffer(&decoded);
-    let tag_params = TagParams {
-        tagsize: config.tag_params.tag_size,
-        fx: config.tag_params.fx,
-        fy: config.tag_params.fy,
-        cx: config.tag_params.cx,
-        cy: config.tag_params.cy,
-    };
-
-    let pose_estimations: Vec<Vec<PindropPoseEstimation>> = pose::estimate(image, tag_params);
-    pose_estimations
-        .into_iter()
-        .enumerate()
-        .for_each(|estimations| {
-            if let Some(best_pose) = estimations.1.first() {
-                println!(
-                    "Best pose for detection {}: {{ id: {}, error: {} }}",
-                    estimations.0, best_pose.id, best_pose.error,
-                );
+        let image = Image::from_image_buffer(&decoded);
+        let pose_estimations = pose::estimate(image, tag_params);
+        for (idx, estimations) in pose_estimations.into_iter().enumerate() {
+            if let Some(best_pose) = estimations.first() {
+                println!("Best pose for detection {}: {{ id: {}, error: {} }}",
+                         idx, best_pose.id, best_pose.error);
             } else {
-                println!("No valid pose estimation for detection {}", estimations.0)
+                eprintln!("No valid pose estimation for detection {}", idx)
             }
-        });
-    // let args = Cli::from_args();
+        }
 
-    // match args.command {
-    //     Command::Deploy { rpi4, config } => {
-    //         println!("Deploying Pindrop with config file {:?}", config);
-    //         if rpi4 {
-    //             let path = concat!(env!("CARGO_MANIFEST_DIR"), "/test_data/apriltag_board.pnm");
-    //             let image = match Image::from_pnm_file(path) {
-    //                 Ok(image) => image,
-    //                 Err(e) => panic!("Error loading image: {}", e),
-    //             };
-    //             let tag_params = TagParams {
-    //                 cx: 0.0,
-    //                 cy: 0.0,
-    //                 fx: 220.0,
-    //                 fy: 220.0,
-    //                 tagsize: 16.0,
-    //             };
-
-    //             let pose_estimations: Vec<Vec<pose::PindropPoseEstimation>> =
-    //                 pose::estimate(image, tag_params);
-    //             pose_estimations
-    //                 .into_iter()
-    //                 .enumerate()
-    //                 .for_each(|estimations| {
-    //                     if let Some(best_pose) = estimations.1.first() {
-    //                         println!(
-    //                             "Best pose for detection {}: {{ id: {}, error: {}, translation: {:#?}, rotation: {:#?} }}",
-    //                             estimations.0, best_pose.id, best_pose.error, best_pose.translation, best_pose.rotation
-    //                         );
-    //                     } else {
-    //                         println!("No valid pose estimation for detection {}", estimations.0)
-    //                     }
-    //                 });
-    //         }
-    //     }
-    // }
+        let duration = start.elapsed();
+        println!("Time since last iteration {:?}", duration);
+    }
 }
