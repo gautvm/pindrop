@@ -12,7 +12,7 @@ pub struct PindropPoseEstimation {
 }
 
 // Modules
-mod cli;
+pub mod cli;
 pub mod field;
 pub mod geometry;
 pub mod nt;

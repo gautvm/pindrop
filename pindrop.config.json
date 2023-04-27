@@ -1,5 +1,6 @@
 {
   "cam_settings": {
+    "index": 0,
     "brightness": 0.5,
     "gain": 15,
     "exposure": 1,

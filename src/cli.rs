@@ -15,6 +15,6 @@ pub enum Command {
         rpi4: bool,
 
         #[structopt(parse(from_os_str))]
-        config: PathBuf,
+        config_path: PathBuf,
     },
 }

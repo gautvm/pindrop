@@ -2,6 +2,7 @@ use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
 pub struct CameraSettings {
+    pub index: u32,
     pub brightness: f32,
     pub gain: u32,
     pub exposure: u32,
