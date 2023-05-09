@@ -1,17 +1,13 @@
-use pindrop::{
-    capture::Capture,
-    cli::Command,
-    parser, pose,
-};
+use pindrop::{capture::Capture, cli::Command, parser, pose};
 use std::time::{Duration, Instant};
 use structopt::StructOpt;
 
 fn main() {
     let args = cli::Cli::from_args();
+    let config = parser::parse(config_path.to_str().unwrap()).unwrap();
 
     match args.command {
         Command::Deploy { rpi4, config_path } => {
-            let config = parser::parse(config_path.to_str().unwrap()).unwrap();
             let path = "/dev/video" + config.cam_settings.index.to_string();
             let format = Format::new(
                 config.cam_settings.resolution[0],
