@@ -1,9 +1,7 @@
-use apriltag::{Image, TagParams};
-use apriltag_image::ImageExt;
 use pindrop::{
     capture::Capture,
-    cli::{self, Command},
-    parser, pose, PindropPoseEstimation,
+    cli::Command,
+    parser, pose,
 };
 use std::time::{Duration, Instant};
 use structopt::StructOpt;
