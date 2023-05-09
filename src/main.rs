@@ -18,7 +18,8 @@ fn main() {
             let buffer_count = 4;
 
             if rpi4 {
-                let mut image_capture = Capture::new(device_index, format, frame_count, buffer_count)?;
+                let mut image_capture =
+                    Capture::new(device_index, format, frame_count, buffer_count)?;
                 let images = image_capture.capture_images()?;
                 image_capture.print_statistics();
             }
