@@ -8,7 +8,7 @@ fn main() {
 
     match args.command {
         Command::Deploy { rpi4, config_path } => {
-            let path = "/dev/video" + config.cam_settings.index.to_string();
+            let device_index = config.cam_settings.index.to_string();
             let format = Format::new(
                 config.cam_settings.resolution[0],
                 config.cam_settings.resolution[1],
@@ -18,7 +18,7 @@ fn main() {
             let buffer_count = 4;
 
             if rpi4 {
-                let mut image_capture = Capture::new(path, format, frame_count, buffer_count)?;
+                let mut image_capture = Capture::new(device_index, format, frame_count, buffer_count)?;
                 let images = image_capture.capture_images()?;
                 image_capture.print_statistics();
             }
