@@ -15,13 +15,13 @@ pub fn estimate(image: Image, tag_params: TagParams) -> Vec<Vec<PindropPoseEstim
         .map(|detection| {
             let pose_estimations: Vec<PoseEstimation> =
                 detection.estimate_tag_pose_orthogonal_iteration(&tag_params, 40);
-            
+
             let mut pose_estimations: Vec<PindropPoseEstimation> = pose_estimations
                 .into_iter()
                 .map(|raw_pose| PindropPoseEstimation {
                     id: detection.id(),
                     error: raw_pose.error,
-                    pose: raw_pose
+                    pose: raw_pose,
                 })
                 .collect();
 
