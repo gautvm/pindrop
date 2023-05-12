@@ -1,28 +1,39 @@
-use pindrop::{capture::Capture, cli::Command, parser, pose};
+use rscam;
+use std::fs;
+use std::io::Write;
 use std::time::{Duration, Instant};
-use structopt::StructOpt;
+
+const FRAME_COUNT: usize = 100;
 
 fn main() {
-    let args = cli::Cli::from_args();
-    let config = parser::parse(config_path.to_str().unwrap()).unwrap();
+    let mut camera = rscam::new("/dev/video0").unwrap();
 
-    match args.command {
-        Command::Deploy { rpi4, config_path } => {
-            let device_index = config.cam_settings.index.to_string();
-            let format = Format::new(
-                config.cam_settings.resolution[0],
-                config.cam_settings.resolution[1],
-                v4l::FourCC::new(b"MJPG"),
-            );
-            let frame_count = 1000;
-            let buffer_count = 4;
+    camera
+        .start(&rscam::Config {
+            interval: (1, 30), // 30 fps.
+            resolution: (1280, 720),
+            //format: b"MJPG",
+            ..Default::default()
+        })
+        .unwrap();
 
-            if rpi4 {
-                let mut image_capture =
-                    Capture::new(device_index, format, frame_count, buffer_count)?;
-                let images = image_capture.capture_images()?;
-                image_capture.print_statistics();
-            }
+    let mut i = 0;
+    let mut fps_sum = Duration::from_secs(0);
+    let mut start_time = Instant::now();
+    loop {
+        let frame = camera.capture().unwrap();
+        //let mut file = fs::File::create(&format!("frame-{}.jpg", i)).unwrap();
+        //file.write_all(&frame[..]).unwrap();
+
+        let elapsed_time = start_time.elapsed();
+        fps_sum += elapsed_time;
+        if i % FRAME_COUNT == 0 {
+            let fps = (FRAME_COUNT as f64 / fps_sum.as_secs_f64()).round();
+            println!("FPS: {}", fps);
+            fps_sum = Duration::from_secs(0);
         }
+        start_time = Instant::now();
+
+        i += 1;
     }
 }
